@@ -55,12 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderManifestoSlide(index) {
     currentSlide = (index + manifestoSlides.length) % manifestoSlides.length;
     if (deckImg) {
-      deckImg.style.opacity = '0.35';
+      deckImg.style.opacity = '0.2';
+      deckImg.style.transform = 'scale(1.02)';
       setTimeout(() => {
         deckImg.src = manifestoSlides[currentSlide].src;
         deckImg.alt = manifestoSlides[currentSlide].alt;
         deckImg.style.opacity = '1';
-      }, 140);
+        deckImg.style.transform = 'scale(1)';
+      }, 220);
     }
     if (slideCounter) {
       slideCounter.textContent = `${currentSlide + 1} / ${manifestoSlides.length}`;
@@ -128,6 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* 4. Interactive Booking & Course Configurator ("Seu momento começa aqui ↓ 💚") */
+  const WHATSAPP_PHONE = '5591980381628';
+
   const state = {
     service: 'Drenagem Linfática de Alta Performance',
     feeling: 'Sensação de inchaço / retenção',
@@ -142,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const periodChips = document.querySelectorAll('[data-chip-group="period"]');
   const clientNameInput = document.getElementById('clientName');
   const messagePreview = document.getElementById('messagePreviewText');
-  const copyMsgBtn = document.getElementById('copyMsgBtn');
+  const whatsappBtn = document.getElementById('whatsappBtn');
   const openIgBtn = document.getElementById('openIgBtn');
   const toast = document.getElementById('toast');
 
@@ -150,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!toast) return;
     toast.textContent = text;
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3200);
+    setTimeout(() => toast.classList.remove('show'), 3400);
   }
 
   function buildMessage() {
@@ -165,9 +169,21 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${greeting}\nVim pela sua página e gostaria de agendar meu momento de cuidado!\n• Atendimento desejado: *${state.service}*\n• Como me sinto hoje: ${state.feeling}\n• Modalidade: *${state.modality}*\n• Preferência de horário: ${state.period}\nComo está sua disponibilidade? 🫳🏼✨`;
   }
 
-  function updateConfiguratorUI() {
+  function updateConfiguratorUI(animate = false) {
+    const msg = buildMessage();
     if (messagePreview) {
-      messagePreview.innerHTML = buildMessage().replace(/\n/g, '<br>');
+      if (animate) {
+        messagePreview.style.opacity = '0.45';
+        setTimeout(() => {
+          messagePreview.innerHTML = msg.replace(/\n/g, '<br>');
+          messagePreview.style.opacity = '1';
+        }, 120);
+      } else {
+        messagePreview.innerHTML = msg.replace(/\n/g, '<br>');
+      }
+    }
+    if (whatsappBtn) {
+      whatsappBtn.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
     }
   }
 
@@ -177,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chips.forEach(c => c.classList.remove('active'));
         chip.classList.add('active');
         state[key] = chip.getAttribute('data-value');
-        updateConfiguratorUI();
+        updateConfiguratorUI(true);
       });
     });
   }
@@ -190,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (clientNameInput) {
     clientNameInput.addEventListener('input', (e) => {
       state.name = e.target.value;
-      updateConfiguratorUI();
+      updateConfiguratorUI(false);
     });
   }
 
@@ -217,19 +233,20 @@ document.addEventListener('DOMContentLoaded', () => {
           chip.classList.toggle('active', chip.getAttribute('data-value') === targetModality);
         });
       }
-      updateConfiguratorUI();
+      updateConfiguratorUI(true);
     });
   });
 
-  if (copyMsgBtn) {
-    copyMsgBtn.addEventListener('click', async () => {
+  if (whatsappBtn) {
+    whatsappBtn.addEventListener('click', async () => {
       const msg = buildMessage();
+      whatsappBtn.href = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(msg)}`;
       try {
         await navigator.clipboard.writeText(msg);
-        showToast('Mensagem copiada! Agora é só colar no Direct ou WhatsApp da Gabi 💚');
       } catch {
-        showToast('Mensagem pronta para envio 💚');
+        // Ignora erro caso o navegador bloqueie área de transferência
       }
+      showToast('Abrindo WhatsApp com sua mensagem de agendamento pronta 💚');
     });
   }
 
@@ -245,5 +262,58 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  updateConfiguratorUI();
+  updateConfiguratorUI(false);
+
+  /* 5. Efeito Suave no Header & Revelação Progressiva ao Rolar (Spa Ambience) */
+  const headerEl = document.querySelector('.header');
+  if (headerEl) {
+    window.addEventListener('scroll', () => {
+      headerEl.classList.toggle('header--scrolled', window.scrollY > 18);
+    }, { passive: true });
+  }
+
+  const calmRevealGroups = [
+    '.hero__profile-strip, .hero__title, .hero__lead, .hero__ctas',
+    '.stat-item',
+    '.hero-card, .hero__floating-badge',
+    '.eyebrow, .section-title, .section-subtitle',
+    '.manifesto__quote, .manifesto__body p, .manifesto-deck',
+    '.pillar-mini',
+    '.service-card, .homecare-banner',
+    '.chique-item',
+    '.about__img-box, .about__quote-card, .about__body-copy, .about__actions',
+    '.cred-box',
+    '.academy__title, .academy__highlight-bar, .academy__lead, .academy__ctas, .academy__poster',
+    '.academy-feat',
+    '.faq-item',
+    '.booking__card, .form-group, .footer__top'
+  ];
+
+  const allRevealTargets = document.querySelectorAll(calmRevealGroups.join(', '));
+
+  if ('IntersectionObserver' in window) {
+    allRevealTargets.forEach((el) => {
+      el.classList.add('reveal-calm');
+      const siblings = el.parentElement ? Array.from(el.parentElement.children) : [];
+      const indexInParent = Math.max(0, siblings.indexOf(el));
+      const delayMs = Math.min(indexInParent * 85, 340);
+      el.style.setProperty('--reveal-delay', `${delayMs}ms`);
+    });
+
+    const calmObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -35px 0px'
+    });
+
+    allRevealTargets.forEach(el => calmObserver.observe(el));
+  } else {
+    allRevealTargets.forEach(el => el.classList.add('is-visible'));
+  }
 });
