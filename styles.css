@@ -83,9 +83,9 @@ body {
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Previne vazamento de palavras longas ou handles em telas de 320px */
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  /* Quebra apenas caso uma palavra/URL longa exceda o contêiner, sem partir palavras ao meio no flex */
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 /* Garante que filhos de Flex/Grid possam encolher abaixo de seu conteúdo mínimo */
@@ -1872,16 +1872,19 @@ button {
   }
 
   .hero__visual {
-    grid-template-columns: 1.15fr 0.85fr;
-    align-items: center;
+    grid-template-columns: 1.08fr 0.92fr;
+    align-items: stretch;
   }
 
+  .hero-card--main,
   .hero-card--secondary {
-    aspect-ratio: 9 / 16;
+    aspect-ratio: 4 / 5;
+    height: 100%;
   }
 
   .hero__floating-badge {
     grid-column: 1 / -1;
+    padding: 1.1rem 1.35rem;
   }
 
   .chip-group {
@@ -1967,10 +1970,6 @@ button {
 
 /* >= 768px (Tablets / iPads) */
 @media (min-width: 48rem) {
-  .ig-pill {
-    display: inline-flex;
-  }
-
   .services__grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1992,6 +1991,11 @@ button {
 @media (min-width: 64rem) {
   .header__inner {
     min-height: 4.85rem;
+    gap: 1.25rem;
+  }
+
+  .brand {
+    flex-shrink: 0;
   }
 
   .mobile-menu-btn {
@@ -2003,19 +2007,21 @@ button {
     position: static;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
     background: transparent;
     padding: 0;
     border: none;
     box-shadow: none;
-    gap: 1.5rem;
+    gap: clamp(0.85rem, 1.6vw, 1.5rem);
   }
 
   .nav__link {
-    padding: 0.35rem 0.25rem;
-    font-size: 0.9rem;
+    padding: 0.35rem 0.2rem;
+    font-size: 0.88rem;
     font-weight: 500;
     position: relative;
     border-radius: 0;
+    flex-shrink: 0;
   }
 
   .nav__link::after {
@@ -2038,23 +2044,19 @@ button {
   }
 
   .hero__grid {
-    grid-template-columns: 1.08fr 0.92fr;
-    gap: 3.5rem;
+    grid-template-columns: 1.06fr 0.94fr;
+    gap: 3.25rem;
+    align-items: center;
   }
 
-  .hero-card--secondary {
-    transform: translateY(1.25rem);
-  }
-
+  /* Mantém o card "Primeiro você. Depois o outro." alinhado na grade abaixo das duas fotos, sem cobrir a imagem */
   .hero__floating-badge {
-    position: absolute;
-    left: -1.25rem;
-    bottom: 1.25rem;
-    max-width: 17.5rem;
-    background: rgba(251, 248, 244, 0.96);
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow-elevated);
-    z-index: 3;
+    position: static;
+    grid-column: 1 / -1;
+    max-width: 100%;
+    background: #ffffff;
+    padding: 1.15rem 1.4rem;
+    box-shadow: var(--shadow-soft);
   }
 
   .manifesto__grid {
@@ -2079,5 +2081,12 @@ button {
 
   .booking__card {
     grid-template-columns: 0.88fr 1.12fr;
+  }
+}
+
+/* >= 1248px (Telas largas: exibe também a pílula @gabrielacorreamasso no Header) */
+@media (min-width: 78rem) {
+  .ig-pill {
+    display: inline-flex;
   }
 }

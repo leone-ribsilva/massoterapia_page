@@ -25,3 +25,4 @@ Landing page institucional e de agendamento para **Gabriela Corrêa (`@gabrielac
 └── assets/
     └── images/         # Fotos e lâminas reais do perfil @gabrielacorreamasso
 ```
+
