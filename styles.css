@@ -99,23 +99,29 @@
   }
 }
 
-/* Elementos que surgem suavemente ao rolar a página */
+/* Elementos que surgem suavemente ao rolar a página (para baixo ou para cima, sempre ativos) */
 .reveal-calm {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(24px) scale(0.985);
   filter: blur(3px);
   transition:
     opacity var(--duration-slow) var(--ease-calm),
     transform var(--duration-slow) var(--ease-calm),
     filter var(--duration-slow) var(--ease-calm);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+  transition-delay: 0ms;
+  will-change: opacity, transform, filter;
+}
+
+/* Quando o elemento sai pelo topo da tela, prepara uma entrada suave vinda de cima ao rolar de volta */
+.reveal-calm.reveal-calm--above {
+  transform: translateY(-20px) scale(0.985);
 }
 
 .reveal-calm.is-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
   filter: blur(0);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 /* ==========================================================================
@@ -423,6 +429,7 @@ button {
   gap: 0.65rem;
   min-height: 2.75rem;
   max-width: 100%;
+  transition: opacity 0.4s var(--ease-silk), transform 0.45s var(--ease-calm);
 }
 
 .brand__monogram {
@@ -439,6 +446,13 @@ button {
   letter-spacing: 0.04em;
   border: 1px solid rgba(223, 196, 172, 0.35);
   flex-shrink: 0;
+  transition: transform 0.55s var(--ease-calm), box-shadow 0.55s var(--ease-calm), border-color 0.45s var(--ease-silk);
+}
+
+.brand:hover .brand__monogram {
+  transform: scale(1.05);
+  border-color: var(--bg-nude);
+  box-shadow: 0 4px 14px rgba(43, 29, 14, 0.18);
 }
 
 .brand__text {
@@ -462,14 +476,16 @@ button {
   line-height: 1.25;
 }
 
-/* Menu Mobile colapsado por padrão */
+/* Menu Mobile colapsado por padrão com abertura suave */
 .nav {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--bg-cream);
+  background: rgba(251, 248, 244, 0.98);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   padding: 1rem var(--container-pad) 1.5rem;
   border-bottom: 1px solid var(--border-strong);
   box-shadow: var(--shadow-elevated);
@@ -479,6 +495,7 @@ button {
 
 .nav.open {
   display: flex;
+  animation: faqSoftOpen 0.45s var(--ease-calm);
 }
 
 .nav__link {
@@ -490,7 +507,7 @@ button {
   font-size: 0.96rem;
   font-weight: 600;
   color: var(--text-secondary);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.4s var(--ease-silk), color 0.4s var(--ease-silk), transform 0.4s var(--ease-calm);
 }
 
 .nav__link:active {
@@ -519,7 +536,7 @@ button {
   font-weight: 600;
   color: var(--text-primary);
   width: fit-content;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.45s var(--ease-silk), transform 0.45s var(--ease-calm), box-shadow 0.45s var(--ease-calm);
 }
 
 .ig-pill__avatar {
@@ -528,6 +545,11 @@ button {
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
+  transition: transform 0.5s var(--ease-calm);
+}
+
+.ig-pill:hover .ig-pill__avatar {
+  transform: scale(1.08);
 }
 
 .header__cta {
@@ -545,7 +567,7 @@ button {
   border: 1px solid var(--border-strong);
   background: var(--bg-sand);
   color: var(--text-primary);
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.45s var(--ease-calm), background-color 0.4s var(--ease-silk);
 }
 
 .mobile-menu-btn:active {

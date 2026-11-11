@@ -92,6 +92,26 @@ document.addEventListener('DOMContentLoaded', () => {
     nextSlideBtn.addEventListener('click', () => renderManifestoSlide(currentSlide + 1));
   }
 
+  /* Ciclo automático sereno dos slides do Manifesto (pausa ao interagir) */
+  const manifestoDeckEl = document.querySelector('.manifesto-deck');
+  let manifestoInterval = setInterval(() => {
+    renderManifestoSlide(currentSlide + 1);
+  }, 6200);
+
+  if (manifestoDeckEl) {
+    const pauseManifesto = () => clearInterval(manifestoInterval);
+    const resumeManifesto = () => {
+      clearInterval(manifestoInterval);
+      manifestoInterval = setInterval(() => {
+        renderManifestoSlide(currentSlide + 1);
+      }, 6200);
+    };
+    manifestoDeckEl.addEventListener('mouseenter', pauseManifesto);
+    manifestoDeckEl.addEventListener('mouseleave', resumeManifesto);
+    manifestoDeckEl.addEventListener('touchstart', pauseManifesto, { passive: true });
+    manifestoDeckEl.addEventListener('touchend', resumeManifesto, { passive: true });
+  }
+
   /* 3. "Acho Chique..." Horizontal Carousel & Lightbox */
   const chiqueWrapper = document.getElementById('chiqueWrapper');
   const chiquePrev = document.getElementById('chiquePrev');
@@ -301,20 +321,51 @@ document.addEventListener('DOMContentLoaded', () => {
       el.style.setProperty('--reveal-delay', `${delayMs}ms`);
     });
 
-    const calmObserver = new IntersectionObserver((entries, obs) => {
+    const calmObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
-          obs.unobserve(entry.target);
+          entry.target.classList.remove('reveal-calm--above');
+        } else {
+          /* Remove a classe ao sair da tela para que o efeito suave sempre seja re-executado ao rolar novamente */
+          entry.target.classList.remove('is-visible');
+          if (entry.boundingClientRect.top < 0) {
+            entry.target.classList.add('reveal-calm--above');
+          } else {
+            entry.target.classList.remove('reveal-calm--above');
+          }
         }
       });
     }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -35px 0px'
+      threshold: 0.08,
+      rootMargin: '0px 0px -24px 0px'
     });
 
     allRevealTargets.forEach(el => calmObserver.observe(el));
   } else {
     allRevealTargets.forEach(el => el.classList.add('is-visible'));
   }
+
+  /* 6. Abertura e Fechamento Suaves no Acordeão de Dúvidas (FAQ) */
+  document.querySelectorAll('.faq-item').forEach((detailsEl) => {
+    const summaryEl = detailsEl.querySelector('.faq-item__summary');
+    const bodyEl = detailsEl.querySelector('.faq-item__body');
+    if (!summaryEl || !bodyEl || !bodyEl.animate) return;
+
+    summaryEl.addEventListener('click', (e) => {
+      if (detailsEl.open) {
+        e.preventDefault();
+        const anim = bodyEl.animate(
+          [
+            { opacity: 1, transform: 'translateY(0)' },
+            { opacity: 0, transform: 'translateY(-6px)' }
+          ],
+          { duration: 320, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+        );
+        anim.onfinish = () => {
+          detailsEl.removeAttribute('open');
+        };
+      }
+    });
+  });
 });
