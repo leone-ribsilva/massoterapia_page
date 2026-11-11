@@ -130,7 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* 4. Interactive Booking & Course Configurator ("Seu momento começa aqui ↓ 💚") */
-  const WHATSAPP_PHONE = '5591980381628';
+  const WHATSAPP_PHONE = '5591985037271';
+  // const WHATSAPP_PHONE = '5591980381628';
 
   const state = {
     service: 'Drenagem Linfática de Alta Performance',
