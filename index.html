@@ -895,10 +895,15 @@
   <!-- INÍCIO ANNOTATE LAYER -->
   <style id="annotate-layer-styles">
     #annotate-layer-root {
+      display: none !important;
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       color: #1F1710;
       line-height: 1.45;
       z-index: 9990;
+    }
+
+    #annotate-layer-root.ann-layer-enabled {
+      display: block !important;
     }
 
     body.ann-mode-active {
@@ -1232,7 +1237,7 @@
     }
   </style>
 
-  <div id="annotate-layer-root" data-annotate-ui="true">
+  <div id="annotate-layer-root" hidden data-annotate-ui="true">
     <div id="ann-pins-container" data-annotate-ui="true"></div>
 
     <!-- Popover Flutuante de Edição do Pino -->
@@ -1280,10 +1285,20 @@
 
   <script id="annotate-layer-script">
     (function () {
+      /* Só carrega e exibe a camada de anotação se a URL contiver ?revisao=true */
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('revisao') !== 'true') {
+        return;
+      }
+
       const STORAGE_KEY = 'gc_homolog_annotations_v1';
       const REPORT_WHATSAPP_NUMBER = '5591989716892';
 
       const rootEl = document.getElementById('annotate-layer-root');
+      if (!rootEl) return;
+      rootEl.removeAttribute('hidden');
+      rootEl.classList.add('ann-layer-enabled');
+
       const pinsContainer = document.getElementById('ann-pins-container');
       const toolbar = document.getElementById('annToolbar');
       const toggleBtn = document.getElementById('annToggleBtn');
