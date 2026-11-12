@@ -69,10 +69,13 @@
    0. ANIMAÇÕES DE RESPIRAÇÃO & REVELAÇÃO SERENA (SPA AMBIENCE)
    ========================================================================== */
 @keyframes calmBreathe {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 3px rgba(45, 94, 69, 0.18);
   }
+
   50% {
     transform: scale(1.16);
     box-shadow: 0 0 0 7px rgba(45, 94, 69, 0.06);
@@ -80,9 +83,12 @@
 }
 
 @keyframes gentleFloat {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
@@ -93,6 +99,7 @@
     opacity: 0;
     transform: translateY(-6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -128,10 +135,13 @@
    0. ANIMAÇÕES DE RESPIRAÇÃO & REVELAÇÃO SERENA (SPA AMBIENCE)
    ========================================================================== */
 @keyframes calmBreathe {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 3px rgba(45, 94, 69, 0.18);
   }
+
   50% {
     transform: scale(1.16);
     box-shadow: 0 0 0 7px rgba(45, 94, 69, 0.06);
@@ -139,9 +149,12 @@
 }
 
 @keyframes gentleFloat {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
@@ -152,6 +165,7 @@
     opacity: 0;
     transform: translateY(-6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -186,7 +200,9 @@
 /* ==========================================================================
    1. RESET & PREVENÇÃO GLOBAL DE ESTOURO DE TEXTO (MOBILE-FIRST BASE)
    ========================================================================== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -213,11 +229,21 @@ body {
 }
 
 /* Garante que filhos de Grid possam encolher sem quebrar containers de navegação Flex */
-section, article, main, p, h1, h2, h3, h4, li {
+section,
+article,
+main,
+p,
+h1,
+h2,
+h3,
+h4,
+li {
   min-width: 0;
 }
 
-img, svg, video {
+img,
+svg,
+video {
   max-width: 100%;
   height: auto;
   display: block;
@@ -229,7 +255,8 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-button, input {
+button,
+input {
   font: inherit;
   color: inherit;
   background: none;
@@ -249,7 +276,8 @@ button {
 
 .container {
   width: 100%;
-  max-width: 76.25rem; /* 1220px */
+  max-width: 76.25rem;
+  /* 1220px */
   margin-inline: auto;
   padding-inline: var(--container-pad);
 }
@@ -452,7 +480,8 @@ button {
 }
 
 .btn--sm {
-  min-height: 2.75rem; /* 44px touch target */
+  min-height: 2.75rem;
+  /* 44px touch target */
   padding: 0.55rem 1rem;
   font-size: 0.82rem;
   width: fit-content;
@@ -612,7 +641,8 @@ button {
 .nav__link {
   display: flex;
   align-items: center;
-  min-height: 2.85rem; /* >= 44px touch target */
+  min-height: 2.85rem;
+  /* >= 44px touch target */
   padding: 0.5rem 0.85rem;
   border-radius: var(--radius-sm);
   font-size: 0.96rem;
@@ -1479,8 +1509,8 @@ button {
 }
 
 .black-loc-card__icon {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.35rem;
+  height: 2.35rem;
   border-radius: 0.65rem;
   background: rgba(184, 168, 102, 0.18);
   color: #D9C98B;
@@ -1498,7 +1528,7 @@ button {
   margin-bottom: 0.18rem;
 }
 
-.black-loc-card span {
+.black-loc-card div > span {
   display: block;
   font-size: 0.82rem;
   color: var(--text-on-dark-muted);
@@ -1556,7 +1586,8 @@ button {
 }
 
 .carousel-btn {
-  min-width: 2.875rem; /* 46px */
+  min-width: 2.875rem;
+  /* 46px */
   min-height: 2.875rem;
   border-radius: 50%;
   background: #ffffff;
@@ -2483,12 +2514,16 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.15s !important;
     scroll-behavior: auto !important;
   }
+
   .reveal-calm {
     opacity: 1 !important;
     transform: none !important;
