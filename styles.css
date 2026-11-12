@@ -1341,6 +1341,204 @@ button {
 }
 
 /* ==========================================================================
+   8.5 CAMPANHA ESPECIAL BLACK MASSAGEM (11 A 15 DE NOVEMBRO)
+   ========================================================================== */
+.black-campaign {
+  position: relative;
+  padding: var(--space-section) 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(163, 150, 86, 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(45, 94, 69, 0.18) 0%, transparent 50%),
+    linear-gradient(160deg, #16130E 0%, #1F1912 52%, #14110C 100%);
+  color: var(--text-on-dark);
+  border-top: 1px solid rgba(197, 179, 114, 0.24);
+  border-bottom: 1px solid rgba(197, 179, 114, 0.24);
+  overflow: hidden;
+}
+
+.black-campaign__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.black-campaign__title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.6rem, 9vw, 4.5rem);
+  font-weight: 500;
+  line-height: 0.98;
+  color: #FAF3E8;
+  margin-bottom: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.black-campaign__title span {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  color: #B8A866;
+  font-size: clamp(2.35rem, 8.2vw, 4.1rem);
+  margin-top: 0.1rem;
+}
+
+.black-campaign__date-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1.05rem;
+  border-radius: 0.85rem;
+  border: 1.5px solid rgba(184, 168, 102, 0.48);
+  background: rgba(184, 168, 102, 0.1);
+  color: #FAF3E8;
+  font-size: 0.92rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+.black-campaign__date-pill strong {
+  color: #E5D596;
+  font-weight: 700;
+}
+
+.black-campaign__offer-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(184, 168, 102, 0.25);
+  border-left: 4px solid #B8A866;
+  border-radius: var(--radius-md);
+  padding: clamp(1.15rem, 3.8vw, 1.6rem);
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.black-campaign__discount {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 0.75rem;
+}
+
+.black-campaign__discount-label {
+  font-size: 0.95rem;
+  color: var(--text-on-dark-muted);
+}
+
+.black-campaign__discount-value {
+  font-family: var(--font-serif);
+  font-size: clamp(2.65rem, 8vw, 3.6rem);
+  font-weight: 700;
+  font-style: italic;
+  line-height: 0.95;
+  color: #C5B372;
+  text-shadow: 0 4px 18px rgba(197, 179, 114, 0.25);
+}
+
+.black-campaign__discount-rule {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: rgba(184, 168, 102, 0.2);
+  color: #EAE0B7;
+}
+
+.black-campaign__desc {
+  font-size: 0.94rem;
+  color: var(--text-on-dark-muted);
+  line-height: 1.62;
+}
+
+.black-campaign__desc strong {
+  color: #FAF3E8;
+}
+
+.black-campaign__locations {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  margin-bottom: 1.75rem;
+}
+
+.black-loc-card {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(223, 196, 172, 0.18);
+  border-radius: var(--radius-md);
+  padding: 0.95rem 1.1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  transition:
+    transform 0.55s var(--ease-calm),
+    background-color 0.5s var(--ease-silk),
+    border-color 0.5s var(--ease-silk);
+}
+
+.black-loc-card__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.65rem;
+  background: rgba(184, 168, 102, 0.18);
+  color: #D9C98B;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.black-loc-card strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #FAF3E8;
+  margin-bottom: 0.18rem;
+}
+
+.black-loc-card span {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--text-on-dark-muted);
+  line-height: 1.45;
+}
+
+.black-campaign__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.black-campaign__poster-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.black-campaign__poster {
+  width: 100%;
+  max-width: 25.5rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1.5px solid rgba(197, 179, 114, 0.38);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  background: #14110C;
+  transition:
+    transform 0.7s var(--ease-calm),
+    box-shadow 0.7s var(--ease-calm),
+    border-color 0.5s var(--ease-silk);
+}
+
+.black-campaign__poster img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 1.15s var(--ease-calm);
+}
+
+/* ==========================================================================
    9. SÉRIE AUTORAL "ACHO CHIQUE..." (CARROSSEL FLUIDO TOUCH-FRIENDLY)
    ========================================================================== */
 .acho-chique {
@@ -2189,7 +2387,8 @@ button {
   .hero-card:hover,
   .chique-item:hover,
   .about__img-box:hover,
-  .academy__poster:hover {
+  .academy__poster:hover,
+  .black-campaign__poster:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-elevated);
   }
@@ -2197,8 +2396,15 @@ button {
   .hero-card:hover img,
   .chique-item:hover img,
   .about__img-box:hover img,
-  .academy__poster:hover img {
+  .academy__poster:hover img,
+  .black-campaign__poster:hover img {
     transform: scale(1.045);
+  }
+
+  .black-loc-card:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(197, 179, 114, 0.42);
   }
 
   .hero__floating-badge:hover {
@@ -2357,10 +2563,15 @@ button {
   .hero__ctas,
   .about__actions,
   .academy__ctas,
+  .black-campaign__ctas,
   .booking__actions {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
+  }
+
+  .black-campaign__locations {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .header__cta {
@@ -2444,13 +2655,13 @@ button {
     padding: 0;
     border: none;
     box-shadow: none;
-    gap: clamp(1rem, 1.8vw, 1.75rem);
+    gap: clamp(0.75rem, 1.35vw, 1.35rem);
   }
 
   .nav__link {
     min-height: auto;
-    padding: 0.4rem 0.15rem;
-    font-size: 0.9rem;
+    padding: 0.4rem 0.1rem;
+    font-size: 0.86rem;
     font-weight: 500;
     position: relative;
     border-radius: 0;
@@ -2508,7 +2719,8 @@ button {
     gap: 4rem;
   }
 
-  .academy__grid {
+  .academy__grid,
+  .black-campaign__grid {
     grid-template-columns: 1.08fr 0.92fr;
     gap: 4rem;
   }

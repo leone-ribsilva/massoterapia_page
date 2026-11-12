@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const state = {
     service: 'Drenagem Linfática de Alta Performance',
     feeling: 'Sensação de inchaço / retenção',
-    modality: 'No Espaço Bella Forma',
+    modality: 'Abaetetuba — Espaço Bella Forma',
     period: 'Tarde',
     name: ''
   };
@@ -187,7 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return `${greeting}\nVim pela sua página e quero receber informações sobre a *Formação para Terapeutas Manuais (Drenagem Linfática)*! Meu foco principal é: ${state.feeling.toLowerCase()}. Melhor turno para contato: ${state.period}.`;
     }
 
-    return `${greeting}\nVim pela sua página e gostaria de agendar meu momento de cuidado!\n• Atendimento desejado: *${state.service}*\n• Como me sinto hoje: ${state.feeling}\n• Modalidade: *${state.modality}*\n• Preferência de horário: ${state.period}\nComo está sua disponibilidade? 🫳🏼✨`;
+    if (state.service.includes('Black Massagem')) {
+      return `${greeting}\nVim pela sua página e quero aproveitar a campanha *Black Massagem (11 a 15 de Novembro — até 15% OFF em pacotes)*!\n• Interesse: *${state.service}*\n• Objetivo / necessidade: ${state.feeling}\n• Cidade e modalidade: *${state.modality}*\n• Preferência de horário: ${state.period}\nQuais pacotes estão disponíveis? 🫳🏼✨`;
+    }
+
+    return `${greeting}\nVim pela sua página e gostaria de agendar meu momento de cuidado!\n• Atendimento desejado: *${state.service}*\n• Como me sinto hoje: ${state.feeling}\n• Cidade e modalidade: *${state.modality}*\n• Preferência de horário: ${state.period}\nComo está sua disponibilidade? 🫳🏼✨`;
   }
 
   function updateConfiguratorUI(animate = false) {
@@ -301,6 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '.manifesto__quote, .manifesto__body p, .manifesto-deck',
     '.pillar-mini',
     '.service-card, .homecare-banner',
+    '.black-campaign__title, .black-campaign__date-pill, .black-campaign__offer-box, .black-loc-card, .black-campaign__ctas, .black-campaign__poster',
     '.chique-item',
     '.about__img-box, .about__quote-card, .about__body-copy, .about__actions',
     '.cred-box',
