@@ -891,5 +891,783 @@
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="script.js"></script>
+
+  <!-- INÍCIO ANNOTATE LAYER -->
+  <style id="annotate-layer-styles">
+    #annotate-layer-root {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #1F1710;
+      line-height: 1.45;
+      z-index: 9990;
+    }
+
+    body.ann-mode-active {
+      cursor: crosshair !important;
+    }
+
+    body.ann-mode-active a,
+    body.ann-mode-active button,
+    body.ann-mode-active input,
+    body.ann-mode-active summary,
+    body.ann-mode-active [data-lightbox-src] {
+      cursor: crosshair !important;
+    }
+
+    /* Destaque suave no elemento sob o cursor quando o Modo Anotação está ON */
+    .ann-hover-target {
+      outline: 2px dashed #2D5E45 !important;
+      outline-offset: 2px !important;
+    }
+
+    /* Container de Pinos ancorados na página */
+    #ann-pins-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 9992;
+    }
+
+    /* Marcador Circular Numerado */
+    .ann-pin {
+      position: absolute;
+      width: 2rem;
+      height: 2rem;
+      margin-left: -1rem;
+      margin-top: -1rem;
+      border-radius: 999px;
+      background: #2D5E45;
+      color: #ffffff;
+      border: 2.5px solid #ffffff;
+      box-shadow: 0 4px 14px rgba(26, 18, 9, 0.38), 0 0 0 2px rgba(45, 94, 69, 0.35);
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer !important;
+      pointer-events: auto;
+      user-select: none;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, box-shadow 0.25s ease;
+      animation: annPinPop 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .ann-pin:hover,
+    .ann-pin.ann-pin--active {
+      background: #B85D19;
+      transform: scale(1.16);
+      box-shadow: 0 6px 18px rgba(184, 93, 25, 0.45), 0 0 0 4px rgba(184, 93, 25, 0.25);
+      z-index: 9995;
+    }
+
+    @keyframes annPinPop {
+      0% {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Barra de Controle Flutuante (Canto Inferior Esquerdo) */
+    .ann-toolbar {
+      position: fixed;
+      left: 0.85rem;
+      bottom: 4.85rem;
+      z-index: 9998;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      max-width: calc(100vw - 1.7rem);
+      background: rgba(26, 18, 9, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(223, 196, 172, 0.28);
+      padding: 0.45rem 0.55rem;
+      border-radius: 1rem;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
+      color: #FAF5EE;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @media (min-width: 40rem) {
+      .ann-toolbar {
+        left: 1.25rem;
+        bottom: 1.25rem;
+        border-radius: 999px;
+        padding: 0.45rem 0.65rem;
+      }
+    }
+
+    .ann-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      min-height: 2.5rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      color: #FAF5EE;
+      border: 1px solid rgba(250, 245, 238, 0.2);
+      cursor: pointer !important;
+      transition: all 0.25s ease;
+    }
+
+    .ann-toggle-btn.ann-toggle-btn--on {
+      background: #2D5E45;
+      color: #ffffff;
+      border-color: #529471;
+      box-shadow: 0 0 0 3px rgba(45, 94, 69, 0.35);
+    }
+
+    .ann-ToolbarExtras {
+      display: none;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .ann-toolbar.ann-toolbar--expanded .ann-ToolbarExtras {
+      display: inline-flex;
+    }
+
+    .ann-counter {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #DFC4AC;
+      padding: 0.25rem 0.55rem;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .ann-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      min-height: 2.35rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer !important;
+      transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .ann-btn:active {
+      transform: scale(0.96);
+    }
+
+    .ann-btn--send {
+      background: #1F7A4C;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .ann-btn--send:hover {
+      background: #18633D;
+    }
+
+    .ann-btn--clear {
+      background: rgba(220, 68, 55, 0.16);
+      color: #FFB4AB;
+      border: 1px solid rgba(220, 68, 55, 0.35);
+    }
+
+    .ann-btn--clear:hover {
+      background: rgba(220, 68, 55, 0.28);
+    }
+
+    /* Popover / Balão de Anotação */
+    .ann-popover {
+      position: absolute;
+      z-index: 9999;
+      width: min(20.5rem, calc(100vw - 1.5rem));
+      background: #FBF8F4;
+      color: #1F1710;
+      border: 1.5px solid rgba(90, 70, 36, 0.28);
+      border-radius: 1rem;
+      padding: 0.95rem;
+      box-shadow: 0 18px 48px rgba(26, 18, 9, 0.28);
+      display: none;
+      flex-direction: column;
+      gap: 0.65rem;
+      animation: annPopoverIn 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .ann-popover.ann-popover--open {
+      display: flex;
+    }
+
+    @keyframes annPopoverIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.97);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .ann-popover__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(90, 70, 36, 0.14);
+      padding-bottom: 0.5rem;
+    }
+
+    .ann-popover__title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #2B1D0E;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .ann-popover__pin-badge {
+      background: #2D5E45;
+      color: #fff;
+      font-size: 0.72rem;
+      padding: 0.12rem 0.48rem;
+      border-radius: 999px;
+    }
+
+    .ann-popover__close {
+      min-width: 1.75rem;
+      min-height: 1.75rem;
+      border-radius: 50%;
+      background: #F3EAE0;
+      color: #5C4D3F;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer !important;
+    }
+
+    .ann-popover__meta {
+      font-size: 0.73rem;
+      color: #7D6B5A;
+      background: #F3EAE0;
+      padding: 0.4rem 0.6rem;
+      border-radius: 0.5rem;
+      overflow-wrap: anywhere;
+      line-height: 1.35;
+    }
+
+    .ann-popover__textarea {
+      width: 100%;
+      min-height: 4.6rem;
+      padding: 0.6rem 0.75rem;
+      border-radius: 0.65rem;
+      border: 1.5px solid rgba(90, 70, 36, 0.25);
+      background: #ffffff;
+      color: #1F1710;
+      font-family: inherit;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      resize: vertical;
+    }
+
+    .ann-popover__textarea:focus {
+      outline: none;
+      border-color: #2D5E45;
+      box-shadow: 0 0 0 3px rgba(45, 94, 69, 0.14);
+    }
+
+    .ann-popover__actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .ann-popover__btn {
+      min-height: 2.4rem;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .ann-popover__btn--save {
+      background: #2D5E45;
+      color: #ffffff;
+      flex: 1;
+    }
+
+    .ann-popover__btn--save:hover {
+      background: #224935;
+    }
+
+    .ann-popover__btn--delete {
+      background: #FDECEA;
+      color: #B42318;
+      border: 1px solid rgba(180, 35, 24, 0.25);
+    }
+
+    .ann-popover__btn--delete:hover {
+      background: #F9D7D3;
+    }
+  </style>
+
+  <div id="annotate-layer-root" data-annotate-ui="true">
+    <div id="ann-pins-container" data-annotate-ui="true"></div>
+
+    <!-- Popover Flutuante de Edição do Pino -->
+    <div class="ann-popover" id="annPopover" role="dialog" aria-label="Editor de Anotação" data-annotate-ui="true">
+      <div class="ann-popover__header" data-annotate-ui="true">
+        <div class="ann-popover__title" data-annotate-ui="true">
+          <span class="ann-popover__pin-badge" id="annPopoverBadge" data-annotate-ui="true">#1</span>
+          <span data-annotate-ui="true">Observação no ponto</span>
+        </div>
+        <button type="button" class="ann-popover__close" id="annPopoverClose" aria-label="Fechar balão" data-annotate-ui="true">✕</button>
+      </div>
+      <div class="ann-popover__meta" id="annPopoverMeta" data-annotate-ui="true"></div>
+      <textarea
+        class="ann-popover__textarea"
+        id="annPopoverInput"
+        placeholder="Digite o que deseja ajustar neste ponto..."
+        data-annotate-ui="true"
+      ></textarea>
+      <div class="ann-popover__actions" data-annotate-ui="true">
+        <button type="button" class="ann-popover__btn ann-popover__btn--delete" id="annDeleteBtn" data-annotate-ui="true">
+          Excluir pino
+        </button>
+        <button type="button" class="ann-popover__btn ann-popover__btn--save" id="annSaveBtn" data-annotate-ui="true">
+          Salvar
+        </button>
+      </div>
+    </div>
+
+    <!-- Barra de Controle Flutuante -->
+    <div class="ann-toolbar" id="annToolbar" data-annotate-ui="true">
+      <button type="button" class="ann-toggle-btn" id="annToggleBtn" aria-pressed="false" data-annotate-ui="true">
+        📌 Modo Anotação: OFF
+      </button>
+      <div class="ann-ToolbarExtras" id="annToolbarExtras" data-annotate-ui="true">
+        <span class="ann-counter" id="annCounter" data-annotate-ui="true">0 anotações</span>
+        <button type="button" class="ann-btn ann-btn--send" id="annSendBtn" data-annotate-ui="true">
+          Enviar Anotações
+        </button>
+        <button type="button" class="ann-btn ann-btn--clear" id="annClearBtn" data-annotate-ui="true">
+          Limpar tudo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script id="annotate-layer-script">
+    (function () {
+      const STORAGE_KEY = 'gc_homolog_annotations_v1';
+      const REPORT_WHATSAPP_NUMBER = '5591989716892';
+
+      const rootEl = document.getElementById('annotate-layer-root');
+      const pinsContainer = document.getElementById('ann-pins-container');
+      const toolbar = document.getElementById('annToolbar');
+      const toggleBtn = document.getElementById('annToggleBtn');
+      const counterEl = document.getElementById('annCounter');
+      const sendBtn = document.getElementById('annSendBtn');
+      const clearBtn = document.getElementById('annClearBtn');
+
+      const popover = document.getElementById('annPopover');
+      const popoverBadge = document.getElementById('annPopoverBadge');
+      const popoverMeta = document.getElementById('annPopoverMeta');
+      const popoverInput = document.getElementById('annPopoverInput');
+      const popoverClose = document.getElementById('annPopoverClose');
+      const saveBtn = document.getElementById('annSaveBtn');
+      const deleteBtn = document.getElementById('annDeleteBtn');
+
+      let isAnnotateMode = false;
+      let annotations = [];
+      let activePinId = null;
+      let lastHoveredEl = null;
+
+      /* Carrega anotações salvas do localStorage */
+      function loadFromStorage() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) {
+              annotations = parsed;
+            }
+          }
+        } catch {
+          annotations = [];
+        }
+      }
+
+      function saveToStorage() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(annotations));
+        } catch {
+          /* Ignora caso o armazenamento esteja bloqueado */
+        }
+      }
+
+      /* Gera um seletor CSS único para ancorar o pino ao elemento DOM */
+      function getCssSelector(el) {
+        if (!el || el.nodeType !== 1) return 'body';
+        if (el.id) return '#' + CSS.escape(el.id);
+        const parts = [];
+        let cur = el;
+        while (cur && cur.nodeType === 1 && cur !== document.body && cur !== document.documentElement) {
+          let selector = cur.tagName.toLowerCase();
+          if (cur.id) {
+            selector = '#' + CSS.escape(cur.id);
+            parts.unshift(selector);
+            break;
+          }
+          const parent = cur.parentElement;
+          if (parent) {
+            const siblings = Array.from(parent.children).filter(c => c.tagName === cur.tagName);
+            if (siblings.length > 1) {
+              const idx = siblings.indexOf(cur) + 1;
+              selector += ':nth-of-type(' + idx + ')';
+            }
+          }
+          parts.unshift(selector);
+          cur = parent;
+        }
+        return parts.join(' > ') || 'body';
+      }
+
+      /* Identifica automaticamente a tag HTML + 40 primeiros caracteres ou alt da imagem */
+      function describeElement(el) {
+        if (!el || el.nodeType !== 1) return '<body>';
+        const tag = '<' + el.tagName.toLowerCase() + '>';
+        let snippet = '';
+        if (el.tagName.toLowerCase() === 'img') {
+          snippet = (el.getAttribute('alt') || el.getAttribute('src') || 'Imagem').trim();
+        } else {
+          const text = (el.innerText || el.textContent || el.getAttribute('aria-label') || el.getAttribute('placeholder') || '').replace(/\s+/g, ' ').trim();
+          snippet = text;
+        }
+        if (snippet.length > 40) {
+          snippet = snippet.slice(0, 40) + '…';
+        }
+        return snippet ? `${tag} "${snippet}"` : tag;
+      }
+
+      /* Calcula as coordenadas absolutas (pageX, pageY) a partir do elemento ancorado + % relativa */
+      function resolvePinCoordinates(item) {
+        try {
+          const targetEl = item.selector ? document.querySelector(item.selector) : null;
+          if (targetEl) {
+            const rect = targetEl.getBoundingClientRect();
+            if (rect.width > 0 && rect.height > 0) {
+              const x = rect.left + window.scrollX + rect.width * item.relX;
+              const y = rect.top + window.scrollY + rect.height * item.relY;
+              return { x, y };
+            }
+          }
+        } catch {
+          /* Fallback para coordenadas da página */
+        }
+        return {
+          x: item.pageX || 100,
+          y: item.pageY || 100
+        };
+      }
+
+      function updateToolbarUI() {
+        const count = annotations.length;
+        toggleBtn.textContent = isAnnotateMode ? '📌 Modo Anotação: ON' : '📌 Modo Anotação: OFF';
+        toggleBtn.setAttribute('aria-pressed', String(isAnnotateMode));
+        toggleBtn.classList.toggle('ann-toggle-btn--on', isAnnotateMode);
+        document.body.classList.toggle('ann-mode-active', isAnnotateMode);
+
+        /* Mostra contador e botões quando o modo está ON ou quando já existem anotações salvas */
+        toolbar.classList.toggle('ann-toolbar--expanded', isAnnotateMode || count > 0);
+        counterEl.textContent = count === 1 ? '1 anotação' : `${count} anotações`;
+      }
+
+      function renderPins() {
+        pinsContainer.innerHTML = '';
+        annotations.forEach((item, idx) => {
+          const number = idx + 1;
+          const coords = resolvePinCoordinates(item);
+          const pinBtn = document.createElement('button');
+          pinBtn.type = 'button';
+          pinBtn.className = 'ann-pin' + (item.id === activePinId ? ' ann-pin--active' : '');
+          pinBtn.textContent = String(number);
+          pinBtn.title = item.comment ? `#${number}: ${item.comment}` : `Pino #${number} (clique para editar)`;
+          pinBtn.setAttribute('aria-label', `Pino de anotação ${number}`);
+          pinBtn.setAttribute('data-annotate-ui', 'true');
+          pinBtn.style.left = `${coords.x}px`;
+          pinBtn.style.top = `${coords.y}px`;
+
+          pinBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openPopoverForPin(item.id);
+          });
+
+          pinsContainer.appendChild(pinBtn);
+        });
+        updateToolbarUI();
+      }
+
+      function positionPopoverNear(coords) {
+        const popWidth = Math.min(328, window.innerWidth - 24);
+        const minLeft = window.scrollX + 12;
+        const maxLeft = window.scrollX + window.innerWidth - popWidth - 12;
+        let left = coords.x - popWidth / 2;
+        left = Math.max(minLeft, Math.min(maxLeft, left));
+
+        let top = coords.y + 22;
+        const viewportBottom = window.scrollY + window.innerHeight;
+        if (top + 230 > viewportBottom && coords.y - 225 > window.scrollY + 12) {
+          top = coords.y - 215;
+        }
+
+        popover.style.left = `${left}px`;
+        popover.style.top = `${top}px`;
+      }
+
+      function openPopoverForPin(pinId) {
+        const index = annotations.findIndex(a => a.id === pinId);
+        if (index === -1) return;
+        const item = annotations[index];
+        activePinId = pinId;
+
+        const coords = resolvePinCoordinates(item);
+        popoverBadge.textContent = `#${index + 1}`;
+        popoverMeta.textContent = `Elemento: ${item.elementDesc} • Tela: ${item.viewport}`;
+        popoverInput.value = item.comment || '';
+
+        popover.classList.add('ann-popover--open');
+        positionPopoverNear(coords);
+        renderPins();
+
+        setTimeout(() => {
+          popoverInput.focus();
+        }, 30);
+      }
+
+      function closePopover() {
+        /* Se o pino recém-criado estiver sem comentário algum e o usuário fechar sem salvar, ainda mantemos o pino salvo com o texto atual */
+        if (activePinId) {
+          const item = annotations.find(a => a.id === activePinId);
+          if (item) {
+            item.comment = popoverInput.value.trim();
+            saveToStorage();
+          }
+        }
+        activePinId = null;
+        popover.classList.remove('ann-popover--open');
+        renderPins();
+      }
+
+      /* Toggle do Modo Anotação */
+      toggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        isAnnotateMode = !isAnnotateMode;
+        if (!isAnnotateMode && lastHoveredEl) {
+          lastHoveredEl.classList.remove('ann-hover-target');
+          lastHoveredEl = null;
+        }
+        updateToolbarUI();
+      });
+
+      /* Destaque visual suave ao passar o mouse nos elementos com Modo Anotação ON */
+      document.addEventListener('mousemove', (e) => {
+        if (!isAnnotateMode) return;
+        const target = e.target;
+        if (!target || rootEl.contains(target) || target === document.body || target === document.documentElement) {
+          if (lastHoveredEl) {
+            lastHoveredEl.classList.remove('ann-hover-target');
+            lastHoveredEl = null;
+          }
+          return;
+        }
+        if (lastHoveredEl && lastHoveredEl !== target) {
+          lastHoveredEl.classList.remove('ann-hover-target');
+        }
+        target.classList.add('ann-hover-target');
+        lastHoveredEl = target;
+      }, { passive: true });
+
+      /* Intercepta clique em qualquer elemento da página quando o Modo Anotação está ON */
+      document.addEventListener('click', (e) => {
+        if (rootEl.contains(e.target)) {
+          return;
+        }
+
+        if (!isAnnotateMode) {
+          if (activePinId) {
+            closePopover();
+          }
+          return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const targetEl = e.target;
+        if (lastHoveredEl) {
+          lastHoveredEl.classList.remove('ann-hover-target');
+          lastHoveredEl = null;
+        }
+
+        const rect = targetEl.getBoundingClientRect();
+        const relX = rect.width > 0 ? Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width)) : 0.5;
+        const relY = rect.height > 0 ? Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height)) : 0.5;
+
+        const newPin = {
+          id: 'pin_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          selector: getCssSelector(targetEl),
+          relX: Number(relX.toFixed(4)),
+          relY: Number(relY.toFixed(4)),
+          pageX: Math.round(e.clientX + window.scrollX),
+          pageY: Math.round(e.clientY + window.scrollY),
+          elementDesc: describeElement(targetEl),
+          viewport: `${window.innerWidth}x${window.innerHeight}`,
+          comment: ''
+        };
+
+        annotations.push(newPin);
+        saveToStorage();
+        openPopoverForPin(newPin.id);
+      }, true);
+
+      /* Salvar anotação do pino ativo */
+      saveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!activePinId) return;
+        const item = annotations.find(a => a.id === activePinId);
+        if (item) {
+          item.comment = popoverInput.value.trim();
+          saveToStorage();
+        }
+        activePinId = null;
+        popover.classList.remove('ann-popover--open');
+        renderPins();
+      });
+
+      /* Excluir pino ativo */
+      deleteBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!activePinId) return;
+        annotations = annotations.filter(a => a.id !== activePinId);
+        activePinId = null;
+        saveToStorage();
+        popover.classList.remove('ann-popover--open');
+        renderPins();
+      });
+
+      popoverClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closePopover();
+      });
+
+      /* Limpar todas as anotações */
+      clearBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (annotations.length === 0) return;
+        annotations = [];
+        activePinId = null;
+        saveToStorage();
+        popover.classList.remove('ann-popover--open');
+        renderPins();
+      });
+
+      /* Exportar relatório estruturado para o WhatsApp */
+      sendBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (activePinId) {
+          const activeItem = annotations.find(a => a.id === activePinId);
+          if (activeItem) {
+            activeItem.comment = popoverInput.value.trim();
+            saveToStorage();
+          }
+        }
+
+        if (annotations.length === 0) {
+          isAnnotateMode = true;
+          updateToolbarUI();
+          alert('Clique em qualquer ponto da página para adicionar ao menos 1 pino antes de enviar.');
+          return;
+        }
+
+        const lines = [
+          '📌 *RELATÓRIO DE ANOTAÇÕES — HOMOLOGAÇÃO*',
+          'Página: *Gabriela Corrêa | Massoterapia*',
+          `Total de pontos marcados: *${annotations.length}*`,
+          '-----------------------------------'
+        ];
+
+        annotations.forEach((item, index) => {
+          const num = index + 1;
+          const note = item.comment && item.comment.trim()
+            ? item.comment.trim()
+            : '(Sem observação escrita)';
+          lines.push(
+            `*#${num}* — *Elemento:* ${item.elementDesc}`,
+            `📐 *Resolução:* ${item.viewport}`,
+            `💬 *Comentário:* ${note}`,
+            ''
+          );
+        });
+
+        const textReport = lines.join('\n').trim();
+        const waUrl = `https://wa.me/${REPORT_WHATSAPP_NUMBER}?text=${encodeURIComponent(textReport)}`;
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
+      });
+
+      /* Reposiciona os pinos dinamicamente caso a janela seja redimensionada ou elementos mudem de altura */
+      let rafId = null;
+      function schedulePinReposition() {
+        if (rafId) return;
+        rafId = requestAnimationFrame(() => {
+          rafId = null;
+          renderPins();
+          if (activePinId) {
+            const activeItem = annotations.find(a => a.id === activePinId);
+            if (activeItem) {
+              positionPopoverNear(resolvePinCoordinates(activeItem));
+            }
+          }
+        });
+      }
+
+      window.addEventListener('resize', schedulePinReposition, { passive: true });
+      window.addEventListener('scroll', schedulePinReposition, { passive: true });
+
+      /* Inicialização */
+      loadFromStorage();
+      renderPins();
+    })();
+  </script>
+  <!-- FIM ANNOTATE LAYER -->
 </body>
 </html>
