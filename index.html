@@ -1607,6 +1607,19 @@
                 <span>Enviar no Direct (@gabrielacorreamasso)</span>
               </a>
             </div>
+
+            <div class="booking__privacy-note">
+              <svg class="icon icon--xs icon--sage" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
+              <span>
+                Seus dados do simulador são processados localmente no seu navegador apenas para montar sua mensagem.
+                Consulte nossa
+                <button type="button" class="privacy-inline-trigger" data-open-privacy>Política de Privacidade e Telemetria (LGPD)</button>
+                ou <a href="politica-de-privacidade.html" class="privacy-inline-link">abra a página completa</a>.
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -1637,12 +1650,24 @@
           <a href="#sobre">Sobre a Gabi</a>
           <a href="#filosofia-proposito">Propósito</a>
           <a href="#formacao">Formação</a>
+          <a href="politica-de-privacidade.html" data-open-privacy>Política de Privacidade</a>
           <a href="https://www.instagram.com/gabrielacorreamasso/" target="_blank"
             rel="noopener noreferrer">@gabrielacorreamasso</a>
         </div>
       </div>
       <div class="footer__bottom">
-        <span>© 2026 Gabriela Corrêa | Massoterapia e Bem-Estar. Todos os direitos reservados.</span>
+        <div class="footer__bottom-legal">
+          <span>© 2026 Gabriela Corrêa | Massoterapia e Bem-Estar. Todos os direitos reservados.</span>
+          <span class="footer__bottom-sep" aria-hidden="true">•</span>
+          <button type="button" class="footer__privacy-btn" data-open-privacy>
+            <svg class="icon icon--xs icon--nude" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <span>Privacidade &amp; Telemetria (LGPD)</span>
+          </button>
+          <span class="footer__bottom-sep" aria-hidden="true">•</span>
+          <a href="politica-de-privacidade.html" class="footer__privacy-link">Documento completo</a>
+        </div>
         <span style="display: inline-flex; align-items: center; gap: 0.4rem;">
           <svg class="icon icon--xs icon--nude" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -1666,6 +1691,104 @@
         </svg>
       </button>
       <img src="" alt="" class="lightbox__img" id="lightboxImg" />
+    </div>
+  </div>
+
+  <!-- Modal Interativo de Política de Privacidade e Telemetria (LGPD) -->
+  <div class="privacy-modal" id="privacyModal" role="dialog" aria-modal="true"
+    aria-labelledby="privacyModalTitle" aria-hidden="true">
+    <div class="privacy-modal__dialog">
+      <div class="privacy-modal__header">
+        <div>
+          <span class="privacy-modal__badge">Transparência &amp; LGPD (Lei nº 13.709/2018)</span>
+          <h2 class="privacy-modal__title" id="privacyModalTitle">Política de Privacidade e Telemetria</h2>
+        </div>
+        <button type="button" class="privacy-modal__close" id="privacyModalClose" aria-label="Fechar Política de Privacidade">
+          <span>Fechar</span>
+          <svg class="icon icon--xs" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="privacy-modal__body">
+        <p class="privacy-modal__intro">
+          Valorizamos sua privacidade tanto quanto o seu bem-estar. Este resumo explica de forma transparente como esta
+          página trata informações técnicas de navegação (via <code>telemetria.js</code>) e suas escolhas voluntárias no
+          agendamento.
+        </p>
+
+        <div class="privacy-modal__block">
+          <h3>1. O que o módulo de Telemetria (<code>telemetria.js</code>) verifica automaticamente?</h3>
+          <p>
+            Após o carregamento da página, coletamos metadados técnicos de diagnóstico para garantir compatibilidade
+            visual Mobile-First, desempenho e segurança:
+          </p>
+          <ul class="privacy-modal__list">
+            <li>
+              <strong>Navegação e Idioma (<code>navegacao</code>):</strong> URL acessada, parâmetros UTM de campanha,
+              página de origem (<code>referrer</code>), idioma do navegador, fuso horário e assinatura padrão
+              (<code>userAgent</code>).
+            </li>
+            <li>
+              <strong>Hardware, Tela e GPU (<code>hardware</code>):</strong> Resolução da tela, janela visível
+              (<code>viewport</code>), orientação, densidade de pixels, núcleos lógicos de CPU, memória RAM estimada,
+              suporte a toque e modelo do processador gráfico (WebGL).
+            </li>
+            <li>
+              <strong>Dispositivo e Sistema (<code>dispositivo</code>):</strong> Classificação Mobile/Desktop e, quando
+              suportado pelo navegador (<em>Client Hints</em>), plataforma, versão do sistema operacional, arquitetura e
+              modelo do aparelho.
+            </li>
+            <li>
+              <strong>Conexão de Rede Local (<code>redeLocal</code>):</strong> Tipo efetivo de conexão (ex.: 4G/Wi-Fi),
+              velocidade estimada de download (<code>downlink</code>), latência (<code>rtt</code>) e status de economia
+              de dados.
+            </li>
+            <li>
+              <strong>IP Público e Região Aproximada (<code>ipEProvedor</code>):</strong> Consulta HTTPS ao serviço
+              <code>ipapi.co</code> para identificar IP público, provedor/ASN e cidade/estado aproximados (ex.: Belém ou
+              Abaetetuba).
+            </li>
+            <li>
+              <strong>Desempenho (<code>performance</code>):</strong> Tempos de resposta do servidor, construção do DOM
+              e carregamento total da página.
+            </li>
+          </ul>
+        </div>
+
+        <div class="privacy-modal__block">
+          <h3>2. Simulador de Agendamento e Armazenamento Local</h3>
+          <p>
+            • <strong>Sem banco de dados de cadastro:</strong> O nome opcional e as preferências selecionadas no
+            simulador (protocolo, sensação atual, cidade e turno) são processados <strong>exclusivamente no seu
+              navegador</strong> para montar sua mensagem de WhatsApp ou Direct.<br />
+            • <strong>Armazenamento local (<code>localStorage</code>):</strong> Não usamos cookies publicitários de
+            rastreamento cruzado. O <code>localStorage</code> só é acionado no modo técnico de homologação
+            (<code>?revisao=true</code>) para salvar anotações temporárias de layout.
+          </p>
+        </div>
+
+        <div class="privacy-modal__block">
+          <h3>3. Seus Direitos (Art. 18 da LGPD) e Contato</h3>
+          <p>
+            Fundamentamos a telemetria técnica no <strong>legítimo interesse</strong> (diagnóstico de performance e
+            segurança) e o simulador de agendamento em <strong>procedimentos preliminares a pedido do titular</strong>.
+            Você pode solicitar informações, atualização ou exclusão do seu histórico de contato diretamente pelo nosso
+            WhatsApp oficial.
+          </p>
+        </div>
+      </div>
+
+      <div class="privacy-modal__footer">
+        <a href="politica-de-privacidade.html" class="btn btn--primary">
+          <span>Ler Política Completa em Página Dedicada</span>
+        </a>
+        <button type="button" class="btn btn--outline" data-close-privacy>
+          <span>Entendi e Fechar</span>
+        </button>
+      </div>
     </div>
   </div>
 

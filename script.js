@@ -355,26 +355,45 @@ document.addEventListener('DOMContentLoaded', () => {
     allRevealTargets.forEach(el => el.classList.add('is-visible'));
   }
 
-  /* 6. Abertura e Fechamento Suaves no Acordeão de Dúvidas (FAQ) */
-  document.querySelectorAll('.faq-item').forEach((detailsEl) => {
-    const summaryEl = detailsEl.querySelector('.faq-item__summary');
-    const bodyEl = detailsEl.querySelector('.faq-item__body');
-    if (!summaryEl || !bodyEl || !bodyEl.animate) return;
+  /* 7. Modal de Política de Privacidade e Telemetria (LGPD) */
+  const privacyModal = document.getElementById('privacyModal');
+  const privacyOpenTriggers = document.querySelectorAll('[data-open-privacy]');
+  const privacyCloseTriggers = document.querySelectorAll('#privacyModalClose, [data-close-privacy]');
 
-    summaryEl.addEventListener('click', (e) => {
-      if (detailsEl.open) {
-        e.preventDefault();
-        const anim = bodyEl.animate(
-          [
-            { opacity: 1, transform: 'translateY(0)' },
-            { opacity: 0, transform: 'translateY(-6px)' }
-          ],
-          { duration: 320, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
-        );
-        anim.onfinish = () => {
-          detailsEl.removeAttribute('open');
-        };
+  const openPrivacyModal = (e) => {
+    if (e) e.preventDefault();
+    if (!privacyModal) return;
+    privacyModal.classList.add('open');
+    privacyModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closePrivacyModal = () => {
+    if (!privacyModal) return;
+    privacyModal.classList.remove('open');
+    privacyModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  };
+
+  privacyOpenTriggers.forEach((btn) => {
+    btn.addEventListener('click', openPrivacyModal);
+  });
+
+  privacyCloseTriggers.forEach((btn) => {
+    btn.addEventListener('click', closePrivacyModal);
+  });
+
+  if (privacyModal) {
+    privacyModal.addEventListener('click', (e) => {
+      if (e.target === privacyModal) {
+        closePrivacyModal();
       }
     });
-  });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && privacyModal.classList.contains('open')) {
+        closePrivacyModal();
+      }
+    });
+  }
 });
