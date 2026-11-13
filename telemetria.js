@@ -119,15 +119,16 @@
         // Para testes, exibe no console do navegador (F12):
         console.log("[Telemetria]", payload);
 
-        // Para produção, descomente e aponte para sua API/Webhook:
-        /*
-        fetch('https://seu-dominio.com/api/coletar', {
+        // Envia os dados para o Google Apps Script disparar o Gmail
+        const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbwLDSvx_Q8x-chk9rjr_Aia7HMU7I3-FBEuKAohgpSCF5U8THfbVangLQE6WJrIduc/exec";
+
+        fetch(URL_GOOGLE_SCRIPT, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            mode: 'no-cors', // Evita bloqueio de CORS do navegador ao chamar o Google
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload),
             keepalive: true // Garante o envio mesmo se o usuário fechar a aba
-        }).catch(() => {});
-        */
+        }).catch(() => { });
     }
 
     // Aguarda a página carregar completamente para não impactar a velocidade do site
@@ -137,14 +138,3 @@
         window.addEventListener('load', () => setTimeout(coletarMetadados, 100));
     }
 })();
-
-// Envia os dados para o Google Apps Script disparar o Gmail
-const URL_GOOGLE_SCRIPT = "https://script.google.com/macros/s/AKfycbwLDSvx_Q8x-chk9rjr_Aia7HMU7I3-FBEuKAohgpSCF5U8THfbVangLQE6WJrIduc/exec";
-
-fetch(URL_GOOGLE_SCRIPT, {
-    method: 'POST',
-    mode: 'no-cors', // Evita bloqueio de CORS do navegador ao chamar o Google
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payload),
-    keepalive: true
-}).catch(() => { });
