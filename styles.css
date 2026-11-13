@@ -1528,7 +1528,7 @@ button {
   margin-bottom: 0.18rem;
 }
 
-.black-loc-card div > span {
+.black-loc-card div>span {
   display: block;
   font-size: 0.82rem;
   color: var(--text-on-dark-muted);
@@ -3167,7 +3167,7 @@ button {
   margin-bottom: 0.75rem;
 }
 
-.privacy-section a {
+.privacy-section a:not(.btn) {
   color: var(--sage-emerald);
   font-weight: 600;
   text-decoration: underline;
@@ -3568,6 +3568,7 @@ button {
 
 /* >= 768px (Tablets / iPads) */
 @media (min-width: 48rem) {
+
   .services__grid,
   .mod-movement__compare {
     grid-template-columns: repeat(2, 1fr);
