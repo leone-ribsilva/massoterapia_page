@@ -3522,10 +3522,6 @@ button {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .header__cta {
-    display: inline-flex;
-  }
-
   .hero__stats {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -3674,6 +3670,7 @@ button {
   }
 
   .header__cta {
+    display: inline-flex;
     padding: 0.58rem 1.05rem;
     font-size: 0.84rem;
     white-space: nowrap;
